@@ -13,6 +13,7 @@ class ArmazenamentoModel {
     if(diretorio.toString() == ""){
       return
         ExtStorage.getExternalStoragePublicDirectory(
+            //ExtStorage.DIRECTORY_DOWNLOADS
             ExtStorage.DIRECTORY_PICTURES
           //ExtStorage.DIRECTORY_PICTURES+"/"+diretorio
         );
