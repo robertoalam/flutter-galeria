@@ -1,10 +1,12 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import '../models/configuracao_model.dart';
+import '../models/diretorio_model.dart';
 import '../models/permissao_model.dart';
-import '../widgets/thumbs.dart';
 import '../widgets/pop_menu_button.dart';
-import '../models/armazenamento_model.dart';
+import '../widgets/thumb_list.dart';
+import '../widgets/thumb_grid.dart';
 import '../models/item_model.dart';
 
 class HomeTela extends StatefulWidget {
@@ -14,20 +16,77 @@ class HomeTela extends StatefulWidget {
 
 class _HomeTelaState extends State<HomeTela> {
 
-  Future _caminhoDiretorio;
-  List<ItemModel> _listaItens = List<ItemModel>();
   var _permissionStatus;
-  ArmazenamentoModel _armazenamento = new ArmazenamentoModel();
+  String _caminhoDiretorio;
+  DiretorioModel _diretorio = new DiretorioModel();
+  List<ItemModel> _listaItens = List<ItemModel>();
+
+  ConfiguracaoModel _config = new ConfiguracaoModel();
+  String _visualizacao;
+  int _visualizacaoCrossAxisCount = 2;
+
 
   @override
   void initState() {
     super.initState();
-    _listenForPermissionStatus();
-    _caminhoDiretorio = _armazenamento.buscarCaminho("");
+
+    _config.getConfiguracoes().then( (list) {
+      _visualizacao = list['ds_view'];
+      //_visualizacao = "list";
+      _visualizacaoCrossAxisCount = int.parse( list['no_view'] );
+      _inicio();
+
+    });
+
+  }
+
+  _inicio() async {
+    await _listenForPermissionStatus();
+    if (_permissionStatus) {
+      //_caminhoDiretorio = _armazenamento.buscarCaminho("");
+      _caminhoDiretorio = await _diretorio.getPath();
+      if(_caminhoDiretorio != null){
+        setState(() {
+          var dir = Directory( _caminhoDiretorio );
+          _listaItens = _diretorio.buscarArquivosTodos(dir);
+          print('LISTA');
+          print(_listaItens);
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var view ;
+    if(_visualizacao == "grid"){
+      view = Padding(
+        padding: EdgeInsets.all(5) ,
+        child: GridView.count(
+            crossAxisCount: _visualizacaoCrossAxisCount,
+            children: List.generate( _listaItens.length , (index) {
+              return thumbGrid(context , _listaItens[index] );
+            })
+        ),
+      );
+    }else if( _visualizacao == "list" ) {
+      view = Padding(
+        padding: EdgeInsets.all(5) ,
+        child: ListView.builder(
+          itemCount: _listaItens.length,
+          itemBuilder: (context , index){
+            return thumbList(context ,_listaItens[index]);
+          },
+        ),
+      );
+    }else{
+      view = Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -35,47 +94,16 @@ class _HomeTelaState extends State<HomeTela> {
           PopMenuButton(),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: FutureBuilder(
-              future: _caminhoDiretorio,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  var dir = Directory(snapshot.data);
-                  if (_permissionStatus) {
-                    pesquisarItens(dir);
-                  }
-                  return Text(snapshot.data);
-                } else {
-                  return Text("Loading");
-                }
-              },
-            ),
+      body: (_listaItens != null)
+        ?
+          view
+        :
+          Center(
+            child: CircularProgressIndicator(),
           ),
-          Expanded(
-            flex: 19,
-            child: GridView.count(
-              primary: false,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3,
-              children: thumbs(context , _listaItens),
-            ),
-          ),
-
-        ],
-      ),
     );
   }
 
-  pesquisarItens(diretorio) {
-    _listaItens = [];
-    _listaItens = _armazenamento.buscarItens(diretorio);
-  }
 
   void _listenForPermissionStatus() async {
     final status = await PermissaoModel.getStatus();

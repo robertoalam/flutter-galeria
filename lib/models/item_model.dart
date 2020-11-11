@@ -13,12 +13,10 @@ class ItemModel{
   ImagemModel imagem;
   File file;
   Function function;
+  dynamic objeto;
 
-  /*****************************
-  TIPO
-    1 == Pasta
-    2 == Imagem
-  *****************************/
+  // TIPOS
+  // [ imagem / pdf / txt / doc / video/ unknow / pasta ]
 
   ItemModel({
     this.tipo,
@@ -30,6 +28,7 @@ class ItemModel{
     this.pasta,
     this.file,
     this.function,
+    this.objeto,
   });
 
 }

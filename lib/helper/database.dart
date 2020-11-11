@@ -32,14 +32,17 @@ class DatabaseHelper {
 
     // SQL code to create the database table
     Future _onCreate(Database db, int version) async {
-        await db.execute(''' CREATE TABLE IF NOT EXISTS propriedades ( chave TEXT NOT NULL, valor TEXT NOT NULL ); ''');
-        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivos_mover ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL, destino TEXT NOT NULL ); ''');
-        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivos_deletar ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL ); ''');
-        popularPropriedades(db);
+        await db.execute(''' CREATE TABLE IF NOT EXISTS configuracao ( chave TEXT NOT NULL, valor TEXT NOT NULL ); ''');
+        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivo_mover ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL, destino TEXT NOT NULL ); ''');
+        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivo_deletar ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL ); ''');
+        popularConfiguracao(db);
     }
 
-    popularPropriedades(db){
-        db.execute(''' INSERT INTO propriedades (chave,valor) VALUES ('dt_instalacao',datetime('now')); ''');
+    popularConfiguracao(db){
+        db.execute(''' INSERT INTO configuracao (chave,valor) VALUES ('dt_instalacao',datetime('now','localtime')); ''');
+        db.execute(''' INSERT INTO configuracao (chave,valor) VALUES ('no_aberturas',0); ''');
+        db.execute(''' INSERT INTO configuracao (chave,valor) VALUES ('ds_view','grid'); ''');
+        db.execute(''' INSERT INTO configuracao (chave,valor) VALUES ('no_view',3); ''');
         return 1;
     }
 

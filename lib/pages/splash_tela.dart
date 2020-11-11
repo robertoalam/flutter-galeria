@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:galeria/models/configuracao_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/home_tela.dart';
 import '../helper/database.dart';
@@ -12,7 +13,8 @@ class SplashTela extends StatefulWidget {
 class _SplashTelaState extends State<SplashTela> {
 
   final dbHelper = DatabaseHelper.instance;
-  int _aberturasNumero = 0;
+  ConfiguracaoModel config = new ConfiguracaoModel();
+  int _no_aberturas = 0;
 
   @override
   void initState() {
@@ -21,11 +23,16 @@ class _SplashTelaState extends State<SplashTela> {
     _init();
   }
 
-  _redirecionar(int tempo){
-    int tempo = (_aberturasNumero > 2) ? 2 : 5 ;
-    Timer( Duration(seconds: tempo) , ()=>
-        Navigator.pushReplacement( context,  MaterialPageRoute( builder: (context) => HomeTela() ) ),
-    );
+  void _init() async {
+    config.getConfiguracoes().then( (list) {
+      setState(() {
+        _no_aberturas = int.parse( list['no_aberturas'] );
+        list['ds_view'];
+        list['no_view'];
+      });
+      config.aberturaIncrementar();
+      _redirecionar();
+    });
   }
 
   @override
@@ -35,29 +42,10 @@ class _SplashTelaState extends State<SplashTela> {
     );
   }
 
-  void _init() async {
-    await _aberturasSetar();
-    await _buscarAberturas();
-    final allRows = await dbHelper.queryAllRows('propriedades');
-    print('query all rows:');
-    allRows.forEach((row) => print(row));
-    await _redirecionar(_aberturasNumero);
+  _redirecionar(){
+    int tempo = (_no_aberturas > 2) ? 1 : 5 ;
+    Timer( Duration(seconds: tempo) , ()=>
+        Navigator.pushReplacement( context,  MaterialPageRoute( builder: (context) => HomeTela() ) ),
+    );
   }
-
-
-  _aberturasSetar() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _aberturasNumero = (prefs.getInt('aberturas') ?? 0) + 1;
-    await prefs.setInt('aberturas', _aberturasNumero);
-    return ;
-  }
-
-  _buscarAberturas() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _aberturasNumero = prefs.getInt('aberturas');
-    setState(() {
-      _aberturasNumero;
-    });
-  }
-
 }
