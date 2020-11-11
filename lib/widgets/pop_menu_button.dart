@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum MenuOption{ Send , Draft , Discar }
+enum MenuOption{ NewFolder , Send, Draft , Discar }
 
 class PopMenuButton extends StatelessWidget {
 
@@ -9,13 +9,15 @@ class PopMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<MenuOption>(
+      onSelected: (value) => print(value),
+
       itemBuilder: (BuildContext context){
         return <PopupMenuEntry<MenuOption>>[
           PopupMenuItem(
-              value: MenuOption.Send,
+              value: MenuOption.NewFolder,
               child: Row(
                 children: [
-                  Icon(Icons.add , color: Colors.black,),
+                  Icon(Icons.create_new_folder , color: Colors.black,),
                   Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
                   Text("Novo"),
                 ],

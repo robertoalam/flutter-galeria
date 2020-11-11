@@ -19,7 +19,8 @@ Widget thumbGrid(BuildContext context, ItemModel objeto) {
   }
 
   return InkWell(
-    onTap: () => Navigator.push( context,  MaterialPageRoute( builder: (context) => PastaTela(caminhoPesquisar: objeto.caminhoCompleto ) ) ),
+    onTap: () => Navigator.push( context,  MaterialPageRoute( builder: (context) => PastaTela( itemModel: objeto, ) ) ),
+    onLongPress: () => print('segurando'),
     child: Container(
       height: 250,
       child: Column(

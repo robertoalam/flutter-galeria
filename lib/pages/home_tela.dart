@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,27 +35,27 @@ class _HomeTelaState extends State<HomeTela> {
       _visualizacao = list['ds_view'];
       //_visualizacao = "list";
       _visualizacaoCrossAxisCount = int.parse( list['no_view'] );
-      _inicio();
-
+      _buscarArquivos();
     });
 
   }
 
-  _inicio() async {
+  _buscarArquivos() async {
     await _listenForPermissionStatus();
     if (_permissionStatus) {
-      //_caminhoDiretorio = _armazenamento.buscarCaminho("");
-      _caminhoDiretorio = await _diretorio.getPath();
+      _caminhoDiretorio = await _diretorio.buscarCaminho("");
+      //_caminhoDiretorio = await _diretorio.getPath();
+
       if(_caminhoDiretorio != null){
+        var dir = Directory( _caminhoDiretorio );
+        _listaItens =  await _diretorio.buscarArquivosTodos(dir);
         setState(() {
-          var dir = Directory( _caminhoDiretorio );
-          _listaItens = _diretorio.buscarArquivosTodos(dir);
-          print('LISTA');
-          print(_listaItens);
+          _listaItens;
         });
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +92,10 @@ class _HomeTelaState extends State<HomeTela> {
       appBar: AppBar(
         title: Text('Home'),
         actions: [
-          PopMenuButton(),
+           PopMenuButton(),
         ],
       ),
-      body: (_listaItens != null)
+      body: (_listaItens.length != 0)
         ?
           view
         :
