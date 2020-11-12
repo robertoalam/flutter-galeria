@@ -67,7 +67,7 @@ class _PastaTelaState extends State<PastaTela> {
         child: GridView.count(
             crossAxisCount: _visualizacaoCrossAxisCount,
             children: List.generate( _listaItens.length , (index) {
-              return thumbGrid(context , _listaItens[index] );
+              return thumbGrid( context: context , objeto: _listaItens[index] );
             })
         ),
       );
