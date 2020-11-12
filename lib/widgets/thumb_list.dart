@@ -4,17 +4,17 @@ import '../models/item_model.dart';
 Widget thumbList(BuildContext context , ItemModel objeto) {
   var thumbIcone;
   if(objeto.tipo == "pasta") {
-    thumbIcone = Image(image:AssetImage("imagens/pasta.png"),height: 65,);
+    thumbIcone = Image(image:AssetImage("assets/imagens/pasta.png"),height: 65,);
   }else if(objeto.tipo == "imagem"){
     thumbIcone = Image.file(objeto.file, height: 65,);
   }else if(objeto.tipo == "video"){
-    thumbIcone =  Image(image:AssetImage("imagens/video.png"),height: 65,);
+    thumbIcone =  Image(image:AssetImage("assets/imagens/video.png"),height: 65,);
   }else if(objeto.tipo == "txt"){
-    thumbIcone =  Image(image:AssetImage("imagens/txt.png"),height: 65,);
+    thumbIcone =  Image(image:AssetImage("assets/imagens/txt.png"),height: 65,);
   }else if(objeto.tipo == "pdf"){
-    thumbIcone =  Image(image:AssetImage("imagens/pdf.png"),height: 65,);
+    thumbIcone =  Image(image:AssetImage("assets/imagens/pdf.png"),height: 65,);
   }else{
-    thumbIcone = Image(image:AssetImage("imagens/unknow.png"),height: 65,);
+    thumbIcone = Image(image:AssetImage("assets/imagens/unknow.png"),height: 65,);
   }
 
   if( objeto.tipo != "imagem" ){

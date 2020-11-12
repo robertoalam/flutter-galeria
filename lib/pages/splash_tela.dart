@@ -38,7 +38,7 @@ class _SplashTelaState extends State<SplashTela> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Image(image: AssetImage("imagens/logo.png"),),
+      child: Image(image: AssetImage("assets/imagens/logo.png"),),
     );
   }
 

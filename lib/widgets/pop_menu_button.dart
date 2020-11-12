@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 
-enum MenuOption{ NewFolder , Send, Draft , Discar }
+//enum MenuOption{ NewFolder , Send, Draft , Discar }
 
-class PopMenuButton extends StatelessWidget {
+class PopMenuButton extends StatefulWidget {
 
-  const PopMenuButton({Key key}) : super(key : key);
+  final void Function(String) onSubmit;
+
+  const PopMenuButton(this.onSubmit , {Key key } ) : super(key : key);
 
   @override
+  _PopMenuButtonState createState() => _PopMenuButtonState();
+}
+
+class _PopMenuButtonState extends State<PopMenuButton> {
+  @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<MenuOption>(
-      onSelected: (value) => print(value),
+    return PopupMenuButton<String>(
+      onSelected: (value) => widget.onSubmit( value.toString() ),
 
       itemBuilder: (BuildContext context){
-        return <PopupMenuEntry<MenuOption>>[
+        return <PopupMenuEntry<String>>[
           PopupMenuItem(
-              value: MenuOption.NewFolder,
+              value: "nova-pasta",
               child: Row(
                 children: [
                   Icon(Icons.create_new_folder , color: Colors.black,),
@@ -24,7 +31,7 @@ class PopMenuButton extends StatelessWidget {
               )
           ),
           PopupMenuItem(
-              value: MenuOption.Send,
+              value: "visualizar",
               child: Row(
                 children: [
                   Icon(Icons.remove_red_eye , color: Colors.black,),
@@ -34,7 +41,7 @@ class PopMenuButton extends StatelessWidget {
               )
           ),
           PopupMenuItem(
-              value: MenuOption.Send,
+              value: "atualizar",
               child: Row(
                 children: [
                   Icon(Icons.refresh , color: Colors.black,),
@@ -48,3 +55,4 @@ class PopMenuButton extends StatelessWidget {
     );
   }
 }
+
