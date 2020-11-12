@@ -2,7 +2,7 @@
 
 aplicacao para galeria de imagens
 
-## Getting Started
+## Inicio
 
 O aplicativo utiliza o framework flutter. 
 
