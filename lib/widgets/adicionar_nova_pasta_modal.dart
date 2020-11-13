@@ -6,6 +6,9 @@ class ModalAdicionarNovaPasta extends StatefulWidget {
 }
 
 class _ModalAdicionarNovaPastaState extends State<ModalAdicionarNovaPasta> {
+
+  TextEditingController _nomeNovaPastaController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +30,7 @@ class _ModalAdicionarNovaPastaState extends State<ModalAdicionarNovaPasta> {
               Padding(
                 padding: EdgeInsets.all(5),
                 child: TextFormField(
-                  //controller: _nomeNovaPastaController,
+                  controller: _nomeNovaPastaController,
                   decoration: InputDecoration(
                       labelText: "Nova Pasta"
                   ),
@@ -39,7 +42,7 @@ class _ModalAdicionarNovaPastaState extends State<ModalAdicionarNovaPasta> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     RaisedButton(
-                      onPressed: () {} ,
+                      onPressed: (){  Navigator.pop(context); },
                       child: Text("Cancelar"),
                       color: Theme.of(context).primaryColor,
                       textColor: Theme.of(context).textTheme.button.color,
@@ -47,21 +50,32 @@ class _ModalAdicionarNovaPastaState extends State<ModalAdicionarNovaPasta> {
                     Padding(
                         padding: EdgeInsets.all(5) ,
                         child: RaisedButton(
-                          onPressed: () {} ,
+                          onPressed: () {
+                            var retorno = _criarNovaPasta();
+                            if(retorno != null){
+                              Navigator.pop(context, retorno);
+                            }
+                          },
                           child: Text("OK"),
                           color: Theme.of(context).primaryColor,
                           textColor: Theme.of(context).textTheme.button.color,
                         ),
                     ),
-
                   ],
                 ) ,
               ),
-
             ],
           ),
         ),
       ),
     );
+  }
+
+  _criarNovaPasta(){
+    String nome = _nomeNovaPastaController.text;
+    if(nome.trim().toString().length > 0){
+      // print(nome);
+      return nome;
+    }
   }
 }

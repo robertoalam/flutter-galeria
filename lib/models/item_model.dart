@@ -14,7 +14,7 @@ class ItemModel{
   File file;
   Function function;
   dynamic objeto;
-
+  bool selecionado;
   // TIPOS
   // [ imagem / pdf / txt / doc / video/ unknow / pasta ]
 
@@ -29,6 +29,7 @@ class ItemModel{
     this.file,
     this.function,
     this.objeto,
+    this.selecionado = false,
   });
 
 }

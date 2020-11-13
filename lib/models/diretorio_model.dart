@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ext_storage/ext_storage.dart';
 import 'package:galeria/models/regex_model.dart';
+import 'package:path_provider/path_provider.dart';
 import 'item_model.dart';
 
 class DiretorioModel{
@@ -70,4 +71,28 @@ class DiretorioModel{
     });
     return _lista;
   }
+
+  criarNovaPasta(String folderName) async {
+    Map<String,dynamic> retorno = Map();
+    final Directory _appDocDir = await getApplicationDocumentsDirectory();
+    //App Document Directory + folder name
+    //final Directory _appDocDirFolder =  Directory('${_appDocDir.path}/$folderName/');
+    final Directory _appDocDirFolder =  Directory('$folderName/');
+
+    //if folder already exists return path
+    if(await _appDocDirFolder.exists()){
+      retorno['status'] = false;
+      retorno['objeto'] = _appDocDirFolder.path;
+      //return _appDocDirFolder.path;
+      //if folder not exists create folder and then return its path
+    }else{
+      final Directory _appDocDirNewFolder= await _appDocDirFolder.create(recursive: true);
+      //return _appDocDirNewFolder.path;
+      retorno['status'] = true;
+      retorno['objeto'] = _appDocDirNewFolder;
+    }
+    return retorno;
+  }
+
+
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-//enum MenuOption{ NewFolder , Send, Draft , Discar }
-
 class PopMenuButton extends StatefulWidget {
 
   final void Function(String) onSubmit;

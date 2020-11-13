@@ -30,6 +30,8 @@ class _HomeTelaState extends State<HomeTela> {
   List<Widget> _bodyPage = new List<Widget>();
   Widget _bodyBottom ;
 
+  int totalSelecionados = 0;
+
   @override
   void initState() {
     super.initState();
@@ -86,154 +88,123 @@ class _HomeTelaState extends State<HomeTela> {
       );
     }
 
-      if(_visualizacao != null && _visualizacao == "grid"){
+    if(_visualizacao != null && _visualizacao == "grid"){
 
-        _bodyPage.add(
+      _bodyPage.add(
+        Expanded(
+          flex: 19,
+          child: Padding(
+            padding: EdgeInsets.all(5) ,
+            child: GridView.count(
+                crossAxisCount: _visualizacaoCrossAxisCount,
+                children: List.generate( _listaItens.length , (index) {
+                  return thumbGrid(context: context , objeto: _listaItens[index], );
+                })
+            ),
+          ) ,
+        )
+      );
+
+    }else if(_visualizacao != null && _visualizacao == "list" ) {
+      _bodyPage.add(
           Expanded(
             flex: 19,
             child: Padding(
-              padding: EdgeInsets.all(5) ,
-              child: GridView.count(
-                  crossAxisCount: _visualizacaoCrossAxisCount,
-                  children: List.generate( _listaItens.length , (index) {
-                    return thumbGrid(context: context , objeto: _listaItens[index], );
-                  })
+              padding: EdgeInsets.all(5),
+              child: ListView.builder(
+                itemCount: _listaItens.length,
+                itemBuilder: (context, index) {
+                  return thumbList(context, _listaItens[index]);
+                },
               ),
-            ) ,
+            ),
           )
-        );
-
-      }else if(_visualizacao != null && _visualizacao == "list" ) {
-        _bodyPage.add(
-            Expanded(
-              flex: 19,
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: ListView.builder(
-                  itemCount: _listaItens.length,
-                  itemBuilder: (context, index) {
-                    return thumbList(context, _listaItens[index]);
-                  },
-                ),
-              ),
-            )
-        );
-    }else if( _visualizacao != null ){
-      _bodyPage.add(
-        Expanded(
-          flex: 20,
-          child: Center(
-            child: CircularProgressIndicator(),
-          )
-        )
       );
-    }
+  }else if( _visualizacao != null ){
+    _bodyPage.add(
+      Expanded(
+        flex: 20,
+        child: Center(
+          child: CircularProgressIndicator(),
+        )
+      )
+    );
+  }
 
-    var _existeItensSelecionado = true;
-    if(_existeItensSelecionado){
-      _bodyPage.add(
-        Expanded(
-          flex: 3 ,
-          child: Container(
-            padding: EdgeInsets.all(5),
-            decoration: new BoxDecoration(
-              color: Theme.of(context).accentColor,
-            ),
-            child:Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  width: 80,
-                  padding: EdgeInsets.all(5),
-                  decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(16.0),
-                    color: Colors.green,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.copy , color: Colors.white , size: 26, ),
-                      Text("Copiar" ,style: TextStyle(color: Colors.white ) , ),
-                    ],
-                  ),
+  var _existeItensSelecionado = true;
+  if(_existeItensSelecionado){
+    _bodyPage.add(
+      Expanded(
+        flex: 3 ,
+        child: Container(
+          padding: EdgeInsets.all(5),
+          decoration: new BoxDecoration(
+            color: Theme.of(context).accentColor,
+          ),
+          child:Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                width: 80,
+                padding: EdgeInsets.all(5),
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.circular(16.0),
+                  color: Colors.green,
                 ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.copy , color: Colors.white , size: 26, ),
+                    Text("Copiar" ,style: TextStyle(color: Colors.white ) , ),
+                  ],
+                ),
+              ),
 
-                Container(
-                  width: 80,
-                  padding: EdgeInsets.all(5),
-                  decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(16.0),
-                    color: Colors.green,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.cut , color: Colors.white , size: 26, ),
-                      Text("Recortar" ,style: TextStyle(color: Colors.white ) , ),
-                    ],
-                  ),
+              Container(
+                width: 80,
+                padding: EdgeInsets.all(5),
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.circular(16.0),
+                  color: Colors.green,
                 ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.cut , color: Colors.white , size: 26, ),
+                    Text("Recortar" ,style: TextStyle(color: Colors.white ) , ),
+                  ],
+                ),
+              ),
 
-                Container(
-                  width: 80,
-                  padding: EdgeInsets.all(5),
-                  decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(16.0),
-                    color: Colors.green,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.delete , color: Colors.white , size: 26, ),
-                      Text("Deletar" ,style: TextStyle(color: Colors.white ) , ),
-                    ],
-                  ),
+              Container(
+                width: 80,
+                padding: EdgeInsets.all(5),
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.circular(16.0),
+                  color: Colors.green,
                 ),
-              ],
-            ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.delete , color: Colors.white , size: 26, ),
+                    Text("Deletar" ,style: TextStyle(color: Colors.white ) , ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 
-      // _bodyBottom = Theme(
-      //   data: Theme.of(context).copyWith(
-      //       canvasColor: Theme.of(context).accentColor,
-      //       primaryColor: Colors.white,
-      //       textTheme: Theme.of(context).textTheme.copyWith(
-      //           caption: TextStyle(color: Colors.white54)
-      //       )
-      //   ),
-      //   child: BottomNavigationBar(
-      //     // currentIndex: _page,
-      //     onTap: (page){
-      //       // _pageController.animateToPage(
-      //       //     page,
-      //       //     duration: Duration(milliseconds: 500),
-      //       //     curve: Curves.ease
-      //       // );
-      //     },
-      //     items: [
-      //       BottomNavigationBarItem(
-      //           icon: Icon(Icons.copy),
-      //           title: const Text("Copiar")
-      //       ),
-      //       BottomNavigationBarItem(
-      //           icon: Icon(Icons.cut),
-      //           title: const Text("Recortar")
-      //       ),
-      //       BottomNavigationBarItem(
-      //           icon: Icon(Icons.delete),
-      //           title: const Text("Deletar")
-      //       )
-      //     ],
-      //   ),
-      // );
-    }
-      
+  _recontarObjetos(){
+
+  }
       
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Home - $totalSelecionados'),
         actions: [
            PopMenuButton(_opcaoPopMenuButton),
         ],
@@ -263,66 +234,27 @@ class _HomeTelaState extends State<HomeTela> {
 
   _modalAdicionarNovaPasta(BuildContext context) async {
 
-    var retornoLista = await showDialog(
+    var retornoNomePasta = await showDialog(
         context: context,
         builder: (context) {
           return ModalAdicionarNovaPasta();
         }
     );
+    if(retornoNomePasta != null) {
+      var retornoCriarPasta = await _diretorio.criarNovaPasta(
+          '$_caminhoDiretorio/$retornoNomePasta');
+      if (retornoCriarPasta['status']) {
+        //pasta criada
+        print(retornoCriarPasta);
+      } else {
+        // pasta ja existe
+      }
+    }
 
-    // var retornoLista = await showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return Center(
-    //         child: Container(
-    //           padding: EdgeInsets.all(7),
-    //           width: 250,
-    //           height: 300,
-    //           decoration: BoxDecoration(
-    //             color: Colors.white,
-    //           ),
-    //           child: Column(
-    //             children: [
-    //               Padding(
-    //                 padding: EdgeInsets.all(5),
-    //                 child: Text("Criar Pasta" ),
-    //               ),
-    //               Padding(
-    //                 padding: EdgeInsets.all(5),
-    //                 child: TextFormField(
-    //                   //controller: _nomeNovaPastaController,
-    //                   decoration: InputDecoration(
-    //                       labelText: "Nova Pasta"
-    //                   ),
-    //                 ),
-    //               ),
-    //               Row(
-    //                 children: [
-    //                   RaisedButton(
-    //                     onPressed: null ,
-    //                     child: Text("Cancelar"),
-    //                     color: Theme.of(context).primaryColor,
-    //                     textColor: Theme.of(context).textTheme.button.color,
-    //                   ),
-    //                   RaisedButton(
-    //                     onPressed: null ,
-    //                     child: Text("OK"),
-    //                     color: Theme.of(context).primaryColor,
-    //                     textColor: Theme.of(context).textTheme.button.color,
-    //                   ),
-    //                 ],
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //       );
-    //     }
-    // );
-    // //SE A LISTA VIER PREENCHIDA
-    // if(retornoLista != null) {
-    //   //adicionarConcentrado(int.parse( retornoLista[0] ) , int.parse( retornoLista[1] ) , double.parse( retornoLista[2] ) );
-    // }
+
   }
+
+
   void _listenForPermissionStatus() async {
     final status = await PermissaoModel.getStatus();
     setState(() => _permissionStatus = status);

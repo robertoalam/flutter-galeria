@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import '../models/item_model.dart';
 import '../pages/pasta_tela.dart';
 
@@ -17,7 +16,7 @@ class thumbGrid extends StatefulWidget {
 class _thumbGridState extends State<thumbGrid> {
 
   var thumbIcone;
-  var _selecionado = false;
+  var selecionado = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class _thumbGridState extends State<thumbGrid> {
       child: Container(
         padding:EdgeInsets.all(5),
         decoration: new BoxDecoration(
-          color: ( _selecionado ) ? Colors.green : Colors.white ,
+          color: ( selecionado ) ? Colors.green : Colors.white ,
         ),
         height: 250,
         child: Column(
@@ -55,15 +54,15 @@ class _thumbGridState extends State<thumbGrid> {
     );
   }
   _marcar( selecionar ){
-    _selecionado = (selecionar) ? true : false ;
+    selecionado = (selecionar) ? true : false ;
     setState(() {
-      _selecionado = true;
+      selecionado = true;
     });
   }
 
   _inverter(){
     setState(() {
-      _selecionado = !_selecionado;
+      selecionado = !selecionado;
     });
   }
 }
