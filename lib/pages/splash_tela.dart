@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:galeria/models/configuracao_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../pages/home_tela.dart';
+import 'package:galeria/pages/pasta_tela.dart';
 import '../helper/database.dart';
 
 class SplashTela extends StatefulWidget {
@@ -45,7 +44,7 @@ class _SplashTelaState extends State<SplashTela> {
   _redirecionar(){
     int tempo = (_no_aberturas > 2) ? 1 : 5 ;
     Timer( Duration(seconds: tempo) , ()=>
-        Navigator.pushReplacement( context,  MaterialPageRoute( builder: (context) => HomeTela() ) ),
+        Navigator.pushReplacement( context,  MaterialPageRoute( builder: (context) => PastaTela() ) ),
     );
   }
 }

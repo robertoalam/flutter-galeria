@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:galeria/models/bloc_model.dart';
 import '../models/item_model.dart';
 import '../pages/pasta_tela.dart';
 
@@ -6,8 +7,9 @@ class thumbGrid extends StatefulWidget {
 
   final BuildContext context;
   final ItemModel objeto;
+  MeuBlocModel bloc = MeuBlocModel();
 
-  thumbGrid({this.context, this.objeto});
+  thumbGrid({this.context , this.objeto , this.bloc});
 
   @override
   _thumbGridState createState() => _thumbGridState();
@@ -16,7 +18,7 @@ class thumbGrid extends StatefulWidget {
 class _thumbGridState extends State<thumbGrid> {
 
   var thumbIcone;
-  var selecionado = false;
+  var _selecionado = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +37,13 @@ class _thumbGridState extends State<thumbGrid> {
       thumbIcone = Image(image:AssetImage("assets/imagens/unknow.png"),height: 65,);
     }
 
-    return InkWell(
-      onTap: () => Navigator.push( context,  MaterialPageRoute( builder: (context) => PastaTela( itemModel: widget.objeto, ) ) ),
+    return GestureDetector(
+      onTap: () => _navegar() ,
       onLongPress: () => _inverter() ,
       child: Container(
         padding:EdgeInsets.all(5),
         decoration: new BoxDecoration(
-          color: ( selecionado ) ? Colors.green : Colors.white ,
+          color: ( _selecionado ) ? Colors.green : Colors.white ,
         ),
         height: 250,
         child: Column(
@@ -53,16 +55,16 @@ class _thumbGridState extends State<thumbGrid> {
       ),
     );
   }
-  _marcar( selecionar ){
-    selecionado = (selecionar) ? true : false ;
-    setState(() {
-      selecionado = true;
-    });
+
+  _navegar(){
+    if(widget.objeto.tipo == "pasta") Navigator.push( context,  MaterialPageRoute( builder: (context) => PastaTela(directory: widget.objeto.caminhoCompleto,) ) );
   }
 
   _inverter(){
     setState(() {
-      selecionado = !selecionado;
+      _selecionado = !_selecionado;
+      widget.objeto.selecionado = _selecionado;
     });
+    widget.bloc.contador(_selecionado);
   }
 }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import './pages/splash_tela.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'pages/home_tela.dart';
-
 void main() {
   runApp(MyApp());
 }

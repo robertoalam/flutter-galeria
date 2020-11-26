@@ -6,10 +6,9 @@ import '../models/pasta_model.dart';
 class ItemModel{
   String tipo;
   String nome;
-  String caminhoCompleto;
+  Directory caminhoCompleto;
   int tamanho;
   int length;
-  PastaModel pasta;
   ImagemModel imagem;
   File file;
   Function function;
@@ -25,7 +24,6 @@ class ItemModel{
     this.tamanho,
     this.length,
     this.imagem,
-    this.pasta,
     this.file,
     this.function,
     this.objeto,

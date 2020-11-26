@@ -15,16 +15,15 @@ class DiretorioModel{
   }
 
   buscarCaminho(diretorio) async{
-    if(diretorio.toString().length == 0){
-      return await
-        ExtStorage.getExternalStoragePublicDirectory(
-            ExtStorage.DIRECTORY_PICTURES
-        );
+    if( (diretorio.toString().length == 0) || (diretorio == null) || diretorio == "Pictures"){
+      print('buscarCaminho ENTROU 1');
+      return await ExtStorage.getExternalStoragePublicDirectory(
+          ExtStorage.DIRECTORY_PICTURES
+      );
     }else{
-      return await
-        ExtStorage.getExternalStoragePublicDirectory(
-            ExtStorage.DIRECTORY_PICTURES+"/"+diretorio
-        );
+      return await ExtStorage.getExternalStoragePublicDirectory(
+          diretorio
+      );
     }
   }
 
@@ -48,11 +47,19 @@ class DiretorioModel{
 
           ItemModel _item;
 
-          if(_listaRegex[r].nome.toString() == "imagem"){
+          if(_listaRegex[r].nome.toString() == "pasta") {
             _item = new ItemModel(
               tipo: _listaRegex[r].nome,
               nome: nomearquivo,
-              caminhoCompleto: element.toString(),
+              caminhoCompleto: element,
+              //file: element ,
+              objeto: element ,
+            );
+          }else if(_listaRegex[r].nome.toString() == "imagem"){
+            _item = new ItemModel(
+              tipo: _listaRegex[r].nome,
+              nome: nomearquivo,
+              // caminhoCompleto: element.toString(),
               file: element ,
               objeto: element ,
             );
@@ -60,7 +67,7 @@ class DiretorioModel{
             _item = new ItemModel(
               tipo: _listaRegex[r].nome,
               nome: nomearquivo,
-              caminhoCompleto: element.toString(),
+              // caminhoCompleto: element,
               objeto: element ,
             );
           }
