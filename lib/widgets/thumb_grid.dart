@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:galeria/models/bloc_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/item_model.dart';
 import '../pages/pasta_tela.dart';
 
@@ -57,14 +58,21 @@ class _thumbGridState extends State<thumbGrid> {
   }
 
   _navegar(){
-    if(widget.objeto.tipo == "pasta") Navigator.push( context,  MaterialPageRoute( builder: (context) => PastaTela(directory: widget.objeto.caminhoCompleto,) ) );
+    if(widget.objeto.tipo == "pasta") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          PastaTela(directory: widget.objeto.caminhoCompleto,)));
+    }else{
+      launch(widget.objeto.file.toString());
+    }
   }
 
   _inverter(){
     setState(() {
       _selecionado = !_selecionado;
       widget.objeto.selecionado = _selecionado;
+      widget.bloc.contador(_selecionado);
+      widget.bloc.exibirBarra();
     });
-    widget.bloc.contador(_selecionado);
+
   }
 }

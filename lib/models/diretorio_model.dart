@@ -16,7 +16,6 @@ class DiretorioModel{
 
   buscarCaminho(diretorio) async{
     if( (diretorio.toString().length == 0) || (diretorio == null) || diretorio == "Pictures"){
-      print('buscarCaminho ENTROU 1');
       return await ExtStorage.getExternalStoragePublicDirectory(
           ExtStorage.DIRECTORY_PICTURES
       );

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:galeria/models/bloc_model.dart';
 import 'package:galeria/models/configuracao_model.dart';
@@ -24,8 +25,8 @@ class PastaTela extends StatefulWidget {
 class _PastaTelaState extends State<PastaTela> {
 
   MeuBlocModel bloc = MeuBlocModel();
-  int _totalSelecionados = 0;
-  
+  bool _selecionarTodos = false;
+  bool _existeItensSelecionado = false;
   var _permissionStatus;
   String _caminhoDiretorioCompleto;
   String _caminhoDiretorioTruncado = "Pictures";
@@ -38,7 +39,14 @@ class _PastaTelaState extends State<PastaTela> {
   int _visualizacaoCrossAxisCount = 2;
 
   List<Widget> _bodyPage = new List<Widget>();
-  Widget _bodyBottom ;
+
+  List<Map<String,dynamic>> _opcaoLista = [
+    {'valor':'selecionar','icone':Icons.apps,'label':'Selecionar Todos'},
+    {'valor':'deselecionar','icone':Icons.apps,'label':'Deselecionar Todos'},
+    {'valor':'nova','icone':Icons.create_new_folder,'label':'Novo'},
+    {'valor':'visualizar','icone':Icons.remove_red_eye,'label':'Visualizar'},
+    {'valor':'atualizar','icone':Icons.refresh,'label':'Atualizar'},
+  ];
 
   @override
   void initState() {
@@ -91,7 +99,7 @@ class _PastaTelaState extends State<PastaTela> {
       _bodyPage.add(
           Expanded(
             flex: 1,
-            child: Text(_caminhoDiretorioTruncado ),
+            child: Text("${_caminhoDiretorioTruncado} - ${bloc.exibirBarraOpcoes}"),
           )
       );
     }
@@ -106,7 +114,7 @@ class _PastaTelaState extends State<PastaTela> {
               child: GridView.count(
                   crossAxisCount: _visualizacaoCrossAxisCount,
                   children: List.generate( _listaItens.length , (index) {
-                    return thumbGrid( objeto: _listaItens[index], bloc : bloc);
+                    return thumbGrid( objeto: _listaItens[index], bloc : bloc );
                   })
               ),
             ) ,
@@ -139,11 +147,13 @@ class _PastaTelaState extends State<PastaTela> {
       );
     }
 
-    var _existeItensSelecionado = true;
-    if(_existeItensSelecionado){
-      _bodyPage.add(
-        Expanded(
-          flex: 3 ,
+
+    // ADICIONA FOTTOM BAR COM OPCOES
+    _bodyPage.add(
+      Expanded(
+        flex: 3 ,
+        child: Visibility(
+          visible: true,
           child: Container(
             padding: EdgeInsets.all(5),
             decoration: new BoxDecoration(
@@ -203,41 +213,58 @@ class _PastaTelaState extends State<PastaTela> {
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
 
     return StreamBuilder(
       stream: bloc.output,
       builder: (context, snapshot) {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Home - ${bloc.total}"),
+            title: Text("Home - ${bloc.total} - ${bloc.exibirBarraOpcoes}"),
             actions: [
-              PopMenuButton(_opcaoPopMenuButton),
+              PopMenuButton(_opcaoLista ,_opcaoPopMenuButton),
             ],
           ),
           body: Column(
-            children: _bodyPage.map((e) {
+            children: _bodyPage.map( (e) {
               return e;
             }).toList(),
           ),
-          bottomNavigationBar: _bodyBottom ,
         );
       }
     );
   }
-  _opcaoPopMenuButton(String opcao){
-    if(opcao == "nova-pasta"){
-      // chamar modal para criar nova pasta
-      _modalAdicionarNovaPasta( context );
-    }else if(opcao == "visualizar"){
-      // chamar moal com opcoes de vizual
-    }else if( opcao == "atualizar"){
-      // atualizar view
-    }else{
 
+  _opcaoPopMenuButton(String opcao){
+
+    if(opcao=="selecionar"){
+      _buscarArquivos();
     }
-    //atualizar view
+
+    if(opcao=="deselecionar"){
+      bloc.zerar();
+      setState(() {
+        _selecionarTodos = false;
+      });
+      _buscarArquivos();
+    }
+
+    if(opcao == "nova") {
+      // chamar modal para criar nova pasta
+      _modalAdicionarNovaPasta(context);
+    }
+
+   if(opcao == "visualizar") {
+     // chamar moal com opcoes de vizual
+   }
+
+   if( opcao == "atualizar"){
+      // atualizar view
+      _buscarArquivos();
+    }
+    
+   //atualizar view
 
   }
 
