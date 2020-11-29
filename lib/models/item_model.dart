@@ -1,12 +1,12 @@
 import 'dart:io';
 import '../models/imagem_model.dart';
-import '../models/pasta_model.dart';
 
 
 class ItemModel{
   String tipo;
   String nome;
   Directory caminhoCompleto;
+  String caminhoCompletoTruncado;
   int tamanho;
   int length;
   ImagemModel imagem;
@@ -21,6 +21,7 @@ class ItemModel{
     this.tipo,
     this.nome,
     this.caminhoCompleto,
+    this.caminhoCompletoTruncado,
     this.tamanho,
     this.length,
     this.imagem,
@@ -30,4 +31,8 @@ class ItemModel{
     this.selecionado = false,
   });
 
+  @override
+  String toString() {
+    return '{caminhoTruncado: $caminhoCompletoTruncado}';
+  }
 }

@@ -33,8 +33,10 @@ class DatabaseHelper {
     // SQL code to create the database table
     Future _onCreate(Database db, int version) async {
         await db.execute(''' CREATE TABLE IF NOT EXISTS configuracao ( chave TEXT NOT NULL, valor TEXT NOT NULL ); ''');
-        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivo_mover ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL, destino TEXT NOT NULL ); ''');
-        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivo_deletar ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL ); ''');
+        await db.execute(''' CREATE TABLE IF NOT EXISTS arquivos ( _id INTEGER PRIMARY KEY AUTOINCREMENT, acao VARCHAR(10) ,origem TEXT NOT NULL, destino TEXT NOT NULL ); ''');
+        // await db.execute(''' CREATE TABLE IF NOT EXISTS arquivo_mover ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL, destino TEXT NOT NULL ); ''');
+        // await db.execute(''' CREATE TABLE IF NOT EXISTS arquivo_deletar ( _id INTEGER PRIMARY KEY AUTOINCREMENT, origem TEXT NOT NULL ); ''');
+        await db.execute(''' CREATE TABLE IF NOT EXISTS logs ( _id INTEGER PRIMARY KEY AUTOINCREMENT, acao VARCHAR(10) , log TEXT NULL ); ''');
         popularConfiguracao(db);
     }
 

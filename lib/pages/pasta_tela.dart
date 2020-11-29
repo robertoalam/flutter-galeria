@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:galeria/helper/active_record.dart';
 import 'package:galeria/models/bloc_model.dart';
 import 'package:galeria/models/configuracao_model.dart';
 import 'package:galeria/models/diretorio_model.dart';
 import 'package:galeria/models/item_model.dart';
 import 'package:galeria/models/permissao_model.dart';
 import 'package:galeria/widgets/adicionar_nova_pasta_modal.dart';
+import 'package:galeria/widgets/bottom_footer.dart';
 import 'package:galeria/widgets/pop_menu_button.dart';
 import 'package:galeria/widgets/thumb_grid.dart';
 import 'package:galeria/widgets/thumb_list.dart';
@@ -40,12 +42,18 @@ class _PastaTelaState extends State<PastaTela> {
 
   List<Widget> _bodyPage = new List<Widget>();
 
-  List<Map<String,dynamic>> _opcaoLista = [
+  List<Map<String,dynamic>> _listaPopMenuButton = [
     {'valor':'selecionar','icone':Icons.apps,'label':'Selecionar Todos'},
     {'valor':'deselecionar','icone':Icons.apps,'label':'Deselecionar Todos'},
     {'valor':'nova','icone':Icons.create_new_folder,'label':'Novo'},
     {'valor':'visualizar','icone':Icons.remove_red_eye,'label':'Visualizar'},
     {'valor':'atualizar','icone':Icons.refresh,'label':'Atualizar'},
+  ];
+
+  List<Map<String,dynamic>> _listaBottomNavigationBar = [
+    {'valor':'copiar','icone':Icons.copy,'label':'Copiar'},
+    {'valor':'recortar','icone':Icons.cut,'label':'Recortar'},
+    {'valor':'deletar','icone':Icons.delete,'label':'Deletar'},
   ];
 
   @override
@@ -149,90 +157,31 @@ class _PastaTelaState extends State<PastaTela> {
 
 
     // ADICIONA FOTTOM BAR COM OPCOES
-    _bodyPage.add(
-      Expanded(
-        flex: 3 ,
-        child: Visibility(
-          visible: true,
-          child: Container(
-            padding: EdgeInsets.all(5),
-            decoration: new BoxDecoration(
-              color: Theme.of(context).accentColor,
-            ),
-            child:Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  width: 80,
-                  padding: EdgeInsets.all(5),
-                  decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(16.0),
-                    color: Colors.green,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.copy , color: Colors.white , size: 26, ),
-                      Text("Copiar" ,style: TextStyle(color: Colors.white ) , ),
-                    ],
-                  ),
-                ),
-
-                Container(
-                  width: 80,
-                  padding: EdgeInsets.all(5),
-                  decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(16.0),
-                    color: Colors.green,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.cut , color: Colors.white , size: 26, ),
-                      Text("Recortar" ,style: TextStyle(color: Colors.white ) , ),
-                    ],
-                  ),
-                ),
-
-                Container(
-                  width: 80,
-                  padding: EdgeInsets.all(5),
-                  decoration: new BoxDecoration(
-                    borderRadius: new BorderRadius.circular(16.0),
-                    color: Colors.green,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.delete , color: Colors.white , size: 26, ),
-                      Text("Deletar" ,style: TextStyle(color: Colors.white ) , ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    // _bodyPage.add(
+    //
+    // );
 
     return StreamBuilder(
-      stream: bloc.output,
-      builder: (context, snapshot) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("Home - ${bloc.total} - ${bloc.exibirBarraOpcoes}"),
-            actions: [
-              PopMenuButton(_opcaoLista ,_opcaoPopMenuButton),
-            ],
-          ),
-          body: Column(
-            children: _bodyPage.map( (e) {
-              return e;
-            }).toList(),
-          ),
-        );
-      }
+        stream: bloc.output,
+        builder: (context, snapshot) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Home - ${bloc.total} - ${bloc.exibirBarraOpcoes}"),
+              actions: [
+                PopMenuButton(_listaPopMenuButton ,_opcaoPopMenuButton),
+              ],
+            ),
+            body: Column(
+              children: <Widget>[
+                ..._bodyPage.map((e) {
+                  return e;
+                }).toList(),
+                BottomFooter(listagem: _listaBottomNavigationBar, bloc: bloc , onSubmit: _opcaobottomNavigationBar),
+
+              ]
+            ),
+          );
+        }
     );
   }
 
@@ -255,17 +204,37 @@ class _PastaTelaState extends State<PastaTela> {
       _modalAdicionarNovaPasta(context);
     }
 
-   if(opcao == "visualizar") {
-     // chamar moal com opcoes de vizual
-   }
+    if(opcao == "visualizar") {
+      // chamar moal com opcoes de vizual
+    }
 
-   if( opcao == "atualizar"){
+    if( opcao == "atualizar"){
       // atualizar view
       _buscarArquivos();
     }
-    
-   //atualizar view
 
+    //atualizar view
+
+  }
+
+  _opcaobottomNavigationBar(String opcao){
+    var lista = _buscarObjetosSelecionados;
+    ActiveRecord persistencia = new ActiveRecord();
+    persistencia.inserirLista(lista);
+
+    if(opcao=="copiar"){
+
+    }
+  }
+
+  get _buscarObjetosSelecionados{
+    List<Map<String,String>> listaObjetosSelecionados = [];
+    _listaItens.forEach((e) {
+      if(e.selecionado){
+        listaObjetosSelecionados.add({'arquivo':e.caminhoCompletoTruncado.toString()});
+      }
+    });
+    return listaObjetosSelecionados;
   }
 
   _modalAdicionarNovaPasta(BuildContext context) async {

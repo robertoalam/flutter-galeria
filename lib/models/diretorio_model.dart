@@ -45,30 +45,30 @@ class DiretorioModel{
           String nomearquivo = nomeArquivoArray.last.toString().replaceAll("'", "");
 
           ItemModel _item;
+          int posicaoAspas = element.toString().indexOf("'");
+          String caminhoCompletoTruncado = element.toString().substring(posicaoAspas+1,element.toString().length-1);
+
+          _item = new ItemModel();
 
           if(_listaRegex[r].nome.toString() == "pasta") {
-            _item = new ItemModel(
-              tipo: _listaRegex[r].nome,
-              nome: nomearquivo,
-              caminhoCompleto: element,
-              //file: element ,
-              objeto: element ,
-            );
+
+            _item.tipo = _listaRegex[r].nome;
+            _item.nome = nomearquivo;
+            _item.caminhoCompleto = element;
+            _item.caminhoCompletoTruncado = caminhoCompletoTruncado;
+            _item.objeto = element;
+
           }else if(_listaRegex[r].nome.toString() == "imagem"){
-            _item = new ItemModel(
-              tipo: _listaRegex[r].nome,
-              nome: nomearquivo,
-              // caminhoCompleto: element.toString(),
-              file: element ,
-              objeto: element ,
-            );
+            _item.tipo = _listaRegex[r].nome;
+            _item.nome = nomearquivo;
+            _item.caminhoCompletoTruncado = caminhoCompletoTruncado;
+            _item.file = element;
+            _item.objeto = element;
           }else{
-            _item = new ItemModel(
-              tipo: _listaRegex[r].nome,
-              nome: nomearquivo,
-              // caminhoCompleto: element,
-              objeto: element ,
-            );
+            _item.tipo = _listaRegex[r].nome;
+            _item.nome = nomearquivo;
+            _item.caminhoCompletoTruncado = caminhoCompletoTruncado;
+            _item.objeto = element;
           }
           _lista.add(_item);
           break;
