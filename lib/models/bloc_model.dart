@@ -4,7 +4,8 @@ class MeuBlocModel {
 
   int total = 0;
   bool flag;
-  bool exibirBarraOpcoes = false;
+  bool flagAcaoPendente = false;
+  bool flagExibirBarraNavigation = false;
 
   final StreamController _streamController = StreamController();
   Sink get input => _streamController.sink;
@@ -21,18 +22,29 @@ class MeuBlocModel {
     }else{
       total--;
     }
-    exibirBarra();
+    if( (flagAcaoPendente) && (total>0)){
+      exibirBarraSet(true);
+    }else if( (flagAcaoPendente) && (total <= 0) ){
+      exibirBarraSet(true);
+    }else if( (!flagAcaoPendente) && (total>0) ){
+      exibirBarraSet(true);
+    }else if( (!flagAcaoPendente) && (total<=0) ){
+      exibirBarraSet(false);
+    }else {
+      exibirBarraSet(false);
+    }
+
     input.add(total);
   }
 
-  exibirBarra(){
-    if(total <= 0){
-      exibirBarraOpcoes = false;
-      input.add(exibirBarraOpcoes);
-    }else{
-      exibirBarraOpcoes = true;
-      input.add(exibirBarraOpcoes);
-    }
+  exibirBarraSet(bool flag){
+    flagExibirBarraNavigation = flag;
+    input.add(flagExibirBarraNavigation);
+  }
+
+  acaoPendenteSet(bool flag){
+    flagAcaoPendente = flag;
+    input.add(flagAcaoPendente);
   }
 
 }

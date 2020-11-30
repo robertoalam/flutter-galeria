@@ -10,8 +10,18 @@ class ActiveRecord{
   }
 
   inserirLista( lista ){
+
+    var linha = Map<String,dynamic>();
+
     for(int i=0; i< lista.length ; i++){
-      this.insert(lista[i]);
+      linha.clear();
+      linha['acao'] = 'I';
+      linha['origem'] = lista[i].toString();
+      this.insert(linha);
     }
+  }
+
+  colar( lista ){
+
   }
 }

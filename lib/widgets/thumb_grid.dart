@@ -60,7 +60,7 @@ class _thumbGridState extends State<thumbGrid> {
   _navegar(){
     if(widget.objeto.tipo == "pasta") {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          PastaTela(directory: widget.objeto.caminhoCompleto,)));
+          PastaTela(directory: widget.objeto.caminhoCompleto,barraNavigation: widget.bloc.flagExibirBarraNavigation,)));
     }else{
       launch(widget.objeto.file.toString());
     }
@@ -71,7 +71,6 @@ class _thumbGridState extends State<thumbGrid> {
       _selecionado = !_selecionado;
       widget.objeto.selecionado = _selecionado;
       widget.bloc.contador(_selecionado);
-      widget.bloc.exibirBarra();
     });
 
   }

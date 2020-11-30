@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:galeria/helper/active_record.dart';
 import 'package:galeria/models/bloc_model.dart';
@@ -18,7 +17,8 @@ import '../helper/funcoes.dart';
 class PastaTela extends StatefulWidget {
 
   Directory directory;
-  PastaTela({this.directory});
+  bool barraNavigation;
+  PastaTela({this.directory,this.barraNavigation});
 
   @override
   _PastaTelaState createState() => _PastaTelaState();
@@ -50,10 +50,16 @@ class _PastaTelaState extends State<PastaTela> {
     {'valor':'atualizar','icone':Icons.refresh,'label':'Atualizar'},
   ];
 
-  List<Map<String,dynamic>> _listaBottomNavigationBar = [
+  int _flagBotoesNavigationBar = 1;
+  List<Map<String,dynamic>> _listaBottomNavigationBarAcaoPrimeira = [
     {'valor':'copiar','icone':Icons.copy,'label':'Copiar'},
     {'valor':'recortar','icone':Icons.cut,'label':'Recortar'},
     {'valor':'deletar','icone':Icons.delete,'label':'Deletar'},
+  ];
+
+  List<Map<String,dynamic>> _listaBottomNavigationBarAcaoDois = [
+    {'valor':'colar','icone':Icons.paste,'label':'Colar'},
+    {'valor':'cancelar','icone':Icons.cancel,'label':'Cancelar'},
   ];
 
   @override
@@ -63,9 +69,12 @@ class _PastaTelaState extends State<PastaTela> {
     if(widget.directory != null){
       _caminhoDiretorioCompleto = widget.directory.toString();
       _caminhoDiretorioTruncado = funcoes.corrigirCaminhoPasta(_caminhoDiretorioCompleto);
+      bloc.flagExibirBarraNavigation = widget.barraNavigation;
+      _flagBotoesNavigationBar = 2;
     }
 
     _buscarArquivos();
+
   }
 
   _buscarArquivos() async {
@@ -107,7 +116,7 @@ class _PastaTelaState extends State<PastaTela> {
       _bodyPage.add(
           Expanded(
             flex: 1,
-            child: Text("${_caminhoDiretorioTruncado} - ${bloc.exibirBarraOpcoes}"),
+            child: Text("${_caminhoDiretorioTruncado} - ${bloc.flagExibirBarraNavigation}"),
           )
       );
     }
@@ -166,7 +175,7 @@ class _PastaTelaState extends State<PastaTela> {
         builder: (context, snapshot) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Home - ${bloc.total} - ${bloc.exibirBarraOpcoes}"),
+              title: Text("Home - ${bloc.total} - ${bloc.flagExibirBarraNavigation}"),
               actions: [
                 PopMenuButton(_listaPopMenuButton ,_opcaoPopMenuButton),
               ],
@@ -176,7 +185,7 @@ class _PastaTelaState extends State<PastaTela> {
                 ..._bodyPage.map((e) {
                   return e;
                 }).toList(),
-                BottomFooter(listagem: _listaBottomNavigationBar, bloc: bloc , onSubmit: _opcaobottomNavigationBar),
+                BottomFooter(listagem: (_flagBotoesNavigationBar==1)? _listaBottomNavigationBarAcaoPrimeira: _listaBottomNavigationBarAcaoDois, bloc: bloc , onSubmit: _opcaobottomNavigationBar),
 
               ]
             ),
@@ -220,10 +229,39 @@ class _PastaTelaState extends State<PastaTela> {
   _opcaobottomNavigationBar(String opcao){
     var lista = _buscarObjetosSelecionados;
     ActiveRecord persistencia = new ActiveRecord();
-    persistencia.inserirLista(lista);
-
     if(opcao=="copiar"){
+      setState(() {
+        bloc.acaoPendenteSet(true);
+        _flagBotoesNavigationBar = 2;
+      });
+    }
+    if(opcao=="recortar"){
+      //persistencia.inserirLista(lista);
+      setState(() {
+        _flagBotoesNavigationBar = 2;
+      });
+    }
+    if(opcao=="deletar"){
+      setState(() {
+        _flagBotoesNavigationBar = 1;
+        bloc.flagExibirBarraNavigation = false;
+      });
+    }
 
+    if(opcao=="colar"){
+      persistencia.colar(lista);
+      setState(() {
+        _flagBotoesNavigationBar = 1;
+        bloc.flagExibirBarraNavigation = false;
+      });
+    }
+
+    if(opcao=="cancelar"){
+      setState(() {
+        bloc.acaoPendenteSet(false);
+        bloc.exibirBarraSet(false);
+        _flagBotoesNavigationBar = 1;
+      });
     }
   }
 

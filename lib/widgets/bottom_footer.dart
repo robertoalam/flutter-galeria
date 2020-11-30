@@ -20,7 +20,7 @@ class _BottomFooterState extends State<BottomFooter> {
     return Expanded(
       flex: 3 ,
       child: Visibility(
-        visible: widget.bloc.exibirBarraOpcoes,
+        visible: widget.bloc.flagExibirBarraNavigation,
         child: Container(
           padding: EdgeInsets.all(5),
           decoration: new BoxDecoration(
